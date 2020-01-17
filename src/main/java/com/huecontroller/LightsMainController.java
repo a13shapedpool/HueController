@@ -3,21 +3,18 @@ package com.huecontroller;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class LightsMainController extends Thread{
+public class LightsMainController extends Thread {
 
     private LightsMainDialog mainDialog;
-
     private boolean exit;
-    public Light light1;
-    public Light light2;
-    public Light light3;
-    public Light light4;
-    public Light light5;
-    public Light light6;
+    public List<Light> lightList;
 
     public LightsMainController(LightsMainDialog mainDialog) throws Exception {
         this.mainDialog = mainDialog;
+        this.lightList = new ArrayList<>();
     }
 
     @Override
@@ -29,23 +26,27 @@ public class LightsMainController extends Thread{
         }
 
         try {
-            this.light1 = new Light(1);
-            this.light2 = new Light(4);
-//            this.light3 = new Light(4);
-//            this.light4 = new Light(4);
-//            this.light5 = new Light(5);
-//            this.light6 = new Light(6);
+//
+            for (int i = 1; i <= 6; i++) {
+                lightList.add(new Light(i));
+                System.out.println(lightList.get(i - 1).getProductName());
+            }
+
+            Light.getLightProperty("productname", lightList.get(0).getID());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        initLight1(light1);
-        initLight2(light2);
+        for (Light L : lightList) {
+            initLight(L);
+        }
 
-        while(!exit) {
+        while (!exit) {
             try {
-                readLight1Info(light1);
-                readLight2Info(light2);
+                for (Light L : lightList) {
+                    readLightInfo(L);
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -57,42 +58,116 @@ public class LightsMainController extends Thread{
         exit = true;
     }
 
-    private void initLight1(Light L) {
-        this.mainDialog.setL1_name(L.getName());
+    private void initLight(Light L) {
+        int id = L.getID();
+        switch (id) {
+            case 1:
+                this.mainDialog.setL1_name(L.getName());
+                break;
+            case 2:
+                this.mainDialog.setL2_name(L.getName());
+                break;
+            case 3:
+                this.mainDialog.setL3_name(L.getName());
+                break;
+            case 4:
+                this.mainDialog.setL4_name(L.getName());
+                break;
+            case 5:
+                this.mainDialog.setL5_name(L.getName());
+                break;
+            case 6:
+                this.mainDialog.setL6_name(L.getName());
+                break;
+        }
     }
 
-    private void updateLight1Display(Long l1_hue, Long l1_sat, Long l1_bri) {
-        this.mainDialog.setL1_hue(l1_hue);
-        this.mainDialog.setL1_sat(l1_sat);
-        this.mainDialog.setL1_bri(l1_bri);
+    public void lightON(int id) throws Exception {
+        lightList.get(id).lightSwitch();
     }
 
-    private void readLight1Info(Light L) throws Exception {
-        Long hue = L.getLightHue();
-        Long sat = L.getLightSaturation();
-        Long bri = L.getLightBrightness();
-
-        updateLight1Display(hue, sat, bri);
+    private void updateWhiteLightDisplay(Light L, Long bri) {
+        int id = L.getID();
+        switch (id) {
+            case 1:
+                this.mainDialog.setL1_bri(bri);
+                break;
+            case 2:
+                this.mainDialog.setL2_bri(bri);
+                break;
+            case 3:
+                this.mainDialog.setL3_bri(bri);
+                break;
+            case 4:
+                this.mainDialog.setL4_bri(bri);
+                break;
+            case 5:
+                this.mainDialog.setL5_bri(bri);
+                break;
+            case 6:
+                this.mainDialog.setL6_bri(bri);
+                break;
+        }
     }
 
-    private void initLight2(Light lColor) {
-        this.mainDialog.setL2_name(lColor.getName());
+    private void updateColorLightDisplay(Light L, Long hue, Long sat, Long bri) {
+        int id = L.getID();
+        switch (id) {
+            case 1:
+                this.mainDialog.setL1_hue(hue);
+                this.mainDialog.setL1_sat(sat);
+                this.mainDialog.setL1_bri(bri);
+                break;
+            case 2:
+                this.mainDialog.setL2_hue(hue);
+                this.mainDialog.setL2_sat(sat);
+                this.mainDialog.setL2_bri(bri);
+                break;
+            case 3:
+                this.mainDialog.setL3_hue(hue);
+                this.mainDialog.setL3_sat(sat);
+                this.mainDialog.setL3_bri(bri);
+                break;
+            case 4:
+                this.mainDialog.setL4_hue(hue);
+                this.mainDialog.setL4_sat(sat);
+                this.mainDialog.setL4_bri(bri);
+                break;
+            case 5:
+                this.mainDialog.setL5_hue(hue);
+                this.mainDialog.setL5_sat(sat);
+                this.mainDialog.setL5_bri(bri);
+                break;
+            case 6:
+                this.mainDialog.setL6_hue(hue);
+                this.mainDialog.setL6_sat(sat);
+                this.mainDialog.setL6_bri(bri);
+                break;
+        }
     }
 
-    private void updateLight2Display(Long l2_hue, Long l2_sat, Long l2_bri) {
-        this.mainDialog.setL2_hue(l2_hue);
-        this.mainDialog.setL2_sat(l2_sat);
-        this.mainDialog.setL2_bri(l2_bri);
+    private void readLightInfo(Light L) throws Exception {
+
+        switch (L.getProductName()) {
+            case "Hue go":
+            case "Hue play":
+            case "Hue color lamp":
+                Long hue = L.getLightHue();
+                Long sat = L.getLightSaturation();
+                Long bri = L.getLightBrightness();
+
+                updateColorLightDisplay(L, hue, sat, bri);
+                break;
+
+            case "Hue filament bulb":
+                bri = L.getLightBrightness();
+                updateWhiteLightDisplay(L, bri);
+
+                break;
+        }
+
+
     }
-
-    private void readLight2Info(Light L) throws Exception {
-        Long hue = L.getLightHue();
-        Long sat = L.getLightSaturation();
-        Long bri = L.getLightBrightness();
-
-        updateLight2Display(hue, sat, bri);
-    }
-
 
 
 }

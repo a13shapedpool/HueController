@@ -14,19 +14,22 @@ public class Light {
 
     private final String name;
     private final Integer lightID;
+    private final String productName;
     private boolean needsUpdate;
 
-    public Light (String name, Integer lightID) throws Exception{
-        
+    public Light(String name, Integer lightID, String productName) throws Exception {
+
         this.name = name;
         this.lightID = lightID;
+        this.productName = productName;
 
     }
 
-    public Light(Integer lightID) throws Exception{
+    public Light(Integer lightID) throws Exception {
 
         this.name = getName(lightID).toString();
         this.lightID = lightID;
+        this.productName = getProductName(lightID).toString();
 
     }
 
@@ -36,6 +39,10 @@ public class Light {
 
     public Integer getID() {
         return this.lightID;
+    }
+
+    public String getProductName() {
+        return this.productName;
     }
 
     public static Object getName(Integer lightID) throws Exception {
@@ -54,8 +61,24 @@ public class Light {
         }
     }
 
+    public static Object getProductName(Integer lightID) throws Exception {
 
-        public static Object getLightProperty(String property_name, Integer lightID) throws Exception {
+        try {
+            String r = URLReader.address("http://" + hue_bridge_ip + base_url + "lights/" + lightID + "/");
+            JSONParser parser = new JSONParser();
+            Object obj = parser.parse(r);
+            JSONObject j = (JSONObject) obj;
+            return j.get("productname");
+
+        } catch (ClassCastException e) {
+            System.out.println("Bulb number " + lightID + " not registered... Bad request!");
+            System.exit(1);
+            return false;
+        }
+    }
+
+
+    public static Object getLightProperty(String property_name, Integer lightID) throws Exception {
 
         try {
             String r = URLReader.address("http://" + hue_bridge_ip + base_url + "lights/" + lightID + "/");
@@ -113,7 +136,6 @@ public class Light {
 
     public boolean getLightState() throws Exception {
         return ((Boolean) getLightProperty("on", this.lightID));
-
     }
 
     public Long getLightHue() throws Exception {
@@ -137,19 +159,19 @@ public class Light {
         setLightProperty(this.lightID, "on", false);
     }
 
-    public void lightSwitch() throws Exception{
+    public void lightSwitch() throws Exception {
         setLightProperty(this.lightID, "on", !getLightState());
     }
 
-    public void setBrightness(Integer value) throws Exception{
+    public void setBrightness(Integer value) throws Exception {
         setLightProperty(this.lightID, "bri", value);
     }
 
-    public void setColor(Integer value) throws Exception{
+    public void setColor(Integer value) throws Exception {
         setLightProperty(this.lightID, "hue", value);
     }
 
-    public void setSaturation(Integer value) throws Exception{
+    public void setSaturation(Integer value) throws Exception {
         setLightProperty(this.lightID, "sat", value);
     }
 
