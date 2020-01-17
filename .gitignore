@@ -1,0 +1,9 @@
+output
+out
+target
+
+# Intellij
+.idea/
+*.iml
+*.iws
+*.jar
