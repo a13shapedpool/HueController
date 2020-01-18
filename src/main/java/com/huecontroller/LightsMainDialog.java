@@ -1,6 +1,8 @@
 package com.huecontroller;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -56,7 +58,9 @@ public class LightsMainDialog extends JDialog {
     private JButton l6_switch;
 
     private JButton globalPartyButton;
-
+    private JSlider l1_sat_slider;
+    private JSlider l1_bri_slider;
+    private JSlider l1_hue_slider;
 
 
     private JButton getLightsButton;
@@ -67,6 +71,7 @@ public class LightsMainDialog extends JDialog {
     private LightsMainController lightsMainController;
 
     private boolean isConnected;
+    public int panelUpdated;
 
     public static void main(String[] args) throws Exception {
         LightsMainDialog dialog = new LightsMainDialog();
@@ -102,6 +107,7 @@ public class LightsMainDialog extends JDialog {
 
         l1_switch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                panelUpdated = 1;
                 try {
                     onSwitchButton(0);
                 } catch (Exception ex) {
@@ -159,6 +165,24 @@ public class LightsMainDialog extends JDialog {
                 }
             }
         });
+
+        l1_bri_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                panelUpdated = 1;
+                int bri = l1_bri_slider.getValue();
+                setL1_bri((long) bri);
+                try {
+                    lightsMainController.lightList.get(0).needsUpdate = true;
+//                    lightsMainController.lightList.get(0).setBrightness(bri);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+
+
+
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {

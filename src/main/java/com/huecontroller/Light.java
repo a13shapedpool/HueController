@@ -15,13 +15,14 @@ public class Light {
     private final String name;
     private final Integer lightID;
     private final String productName;
-    private boolean needsUpdate;
+    public boolean needsUpdate;
 
     public Light(String name, Integer lightID, String productName) throws Exception {
 
         this.name = name;
         this.lightID = lightID;
         this.productName = productName;
+        this.needsUpdate = true;
 
     }
 
@@ -30,6 +31,7 @@ public class Light {
         this.name = getName(lightID).toString();
         this.lightID = lightID;
         this.productName = getProductName(lightID).toString();
+        this.needsUpdate = true;
 
     }
 
@@ -183,4 +185,7 @@ public class Light {
         setLightProperty(this.lightID, "effect", "none");
     }
 
+    public String getUpdateStatus() {
+        return (String.valueOf(this.needsUpdate));
+    }
 }

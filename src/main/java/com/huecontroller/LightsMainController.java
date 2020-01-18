@@ -62,7 +62,7 @@ public class LightsMainController extends Thread {
         int id = L.getID();
         switch (id) {
             case 1:
-                this.mainDialog.setL1_name(L.getName());
+                this.mainDialog.setL1_name(L.getUpdateStatus());
                 break;
             case 2:
                 this.mainDialog.setL2_name(L.getName());
@@ -148,26 +148,50 @@ public class LightsMainController extends Thread {
 
     private void readLightInfo(Light L) throws Exception {
 
-        switch (L.getProductName()) {
-            case "Hue go":
-            case "Hue play":
-            case "Hue color lamp":
-                Long hue = L.getLightHue();
-                Long sat = L.getLightSaturation();
-                Long bri = L.getLightBrightness();
+        if (L.needsUpdate) {
+            switch (L.getProductName()) {
+                case "Hue go":
+                case "Hue play":
+                case "Hue color lamp":
+                    Long hue = L.getLightHue();
+                    Long sat = L.getLightSaturation();
+                    Long bri = L.getLightBrightness();
 
-                updateColorLightDisplay(L, hue, sat, bri);
-                break;
+                    updateColorLightDisplay(L, hue, sat, bri);
+                    break;
 
-            case "Hue filament bulb":
-                bri = L.getLightBrightness();
-                updateWhiteLightDisplay(L, bri);
+                case "Hue filament bulb":
+                    bri = L.getLightBrightness();
+                    updateWhiteLightDisplay(L, bri);
 
-                break;
+                    break;
+            }
+            L.needsUpdate = false;
         }
-
-
     }
 
+    private void updateLight(Light L) throws Exception {
+
+        if (L.needsUpdate) {
+            switch (L.getProductName()) {
+                case "Hue go":
+                case "Hue play":
+                case "Hue color lamp":
+                    Long hue = L.getLightHue();
+                    Long sat = L.getLightSaturation();
+                    Long bri = L.getLightBrightness();
+
+                    updateColorLightDisplay(L, hue, sat, bri);
+                    break;
+
+                case "Hue filament bulb":
+                    bri = L.getLightBrightness();
+                    updateWhiteLightDisplay(L, bri);
+
+                    break;
+            }
+            L.needsUpdate = false;
+        }
+    }
 
 }
