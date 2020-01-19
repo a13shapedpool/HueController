@@ -26,12 +26,9 @@ public class LightsMainController extends Thread {
         }
 
         try {
-//
             for (int i = 1; i <= 6; i++) {
                 lightList.add(new Light(i));
-                System.out.println(lightList.get(i - 1).getProductName());
             }
-
             Light.getLightProperty("productname", lightList.get(0).getID());
         } catch (Exception e) {
             e.printStackTrace();
@@ -39,14 +36,17 @@ public class LightsMainController extends Thread {
 
         for (Light L : lightList) {
             initLight(L);
+            try {
+                readLightInfo(L);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         while (!exit) {
             try {
-                for (Light L : lightList) {
-                    readLightInfo(L);
-                }
-
+                Thread.sleep(200);
+                checkForUpdates();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -62,7 +62,7 @@ public class LightsMainController extends Thread {
         int id = L.getID();
         switch (id) {
             case 1:
-                this.mainDialog.setL1_name(L.getUpdateStatus());
+                this.mainDialog.setL1_name(L.getName());
                 break;
             case 2:
                 this.mainDialog.setL2_name(L.getName());
@@ -85,6 +85,43 @@ public class LightsMainController extends Thread {
     public void lightON(int id) throws Exception {
         lightList.get(id).lightSwitch();
     }
+
+
+    private void checkForUpdates() throws Exception {
+        int panel = this.mainDialog.getPanelUpdated();
+        if (panel > -1) {
+            String[] panelInfo = this.mainDialog.getPanelInfo(panel);
+            updateLight(lightList.get(panel - 1), panelInfo);
+        }
+    }
+
+    private void updateLight(Light L, String[] panelInfo) throws Exception {
+        Thread.sleep(10);
+        int hue, sat, bri;
+        switch (L.getProductName()) {
+            case "Hue go":
+            case "Hue play":
+            case "Hue color lamp":
+                hue = Integer.parseInt(panelInfo[1]);
+                sat = Integer.parseInt(panelInfo[2]);
+                bri = Integer.parseInt(panelInfo[3]);
+                updateColorLight(L, hue, sat, bri);
+                break;
+            case "Hue filament bulb":
+                bri = Integer.parseInt(panelInfo[3]);
+                L.setBrightness(bri);
+                break;
+        }
+        this.mainDialog.setPanelUpdated(-1);
+    }
+
+    private void updateColorLight(Light L, int hue, int sat, int bri) throws Exception {
+        L.setColor(hue);
+        L.setSaturation(sat);
+        L.setBrightness(bri);
+    }
+
+
 
     private void updateWhiteLightDisplay(Light L, Long bri) {
         int id = L.getID();
@@ -170,28 +207,6 @@ public class LightsMainController extends Thread {
         }
     }
 
-    private void updateLight(Light L) throws Exception {
 
-        if (L.needsUpdate) {
-            switch (L.getProductName()) {
-                case "Hue go":
-                case "Hue play":
-                case "Hue color lamp":
-                    Long hue = L.getLightHue();
-                    Long sat = L.getLightSaturation();
-                    Long bri = L.getLightBrightness();
-
-                    updateColorLightDisplay(L, hue, sat, bri);
-                    break;
-
-                case "Hue filament bulb":
-                    bri = L.getLightBrightness();
-                    updateWhiteLightDisplay(L, bri);
-
-                    break;
-            }
-            L.needsUpdate = false;
-        }
-    }
 
 }

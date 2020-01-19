@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 public class LightsMainDialog extends JDialog {
 
@@ -15,6 +16,7 @@ public class LightsMainDialog extends JDialog {
     private JButton connectButton;
     private JList<Light> lightJList;
 
+    private JPanel l1_panel;
     private JTextField l1_name;
     private JTextField l1_room;
     private JTextField l1_hue;
@@ -62,16 +64,13 @@ public class LightsMainDialog extends JDialog {
     private JSlider l1_bri_slider;
     private JSlider l1_hue_slider;
 
-
+    private List<JTextField> briTextFields;
     private JButton getLightsButton;
-    /*
-    Boutons, textes, etc...
-     */
 
     private LightsMainController lightsMainController;
 
     private boolean isConnected;
-    public int panelUpdated;
+    public int panelUpdated = -1;
 
     public static void main(String[] args) throws Exception {
         LightsMainDialog dialog = new LightsMainDialog();
@@ -166,22 +165,22 @@ public class LightsMainDialog extends JDialog {
             }
         });
 
+//        private void sliderChangeListener(JSlider slider) {
+//            slider.addChangeListener
+//
+//        }
+
         l1_bri_slider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                panelUpdated = 1;
-                int bri = l1_bri_slider.getValue();
-                setL1_bri((long) bri);
                 try {
-                    lightsMainController.lightList.get(0).needsUpdate = true;
-//                    lightsMainController.lightList.get(0).setBrightness(bri);
+                    int bri = l1_bri_slider.getValue();
+                    setL1_bri((long) bri);
+                    setPanelUpdated(1);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
         });
-
-
-
 
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -191,6 +190,15 @@ public class LightsMainDialog extends JDialog {
             }
         });
     }
+
+    public int getPanelUpdated() {
+        return this.panelUpdated;
+    }
+
+    public void setPanelUpdated(int i) {
+        this.panelUpdated = i;
+    }
+
 
     private void onConnectButton() {
         if (!isConnected) {
@@ -223,6 +231,53 @@ public class LightsMainDialog extends JDialog {
     private void onSwitchButton(int id) throws Exception {
         lightsMainController.lightON(id);
     }
+
+    public String[] getPanelInfo(int panelID) {
+        String name = "";
+        String hue = "";
+        String sat = "";
+        String bri = "";
+        switch (panelID) {
+            case 1:
+                name = l1_name.getText();
+                hue = l1_hue.getText();
+                sat = l1_sat.getText();
+                bri = l1_bri.getText();
+                break;
+            case 2:
+                name = l2_name.getText();
+                hue = l2_hue.getText();
+                sat = l2_sat.getText();
+                bri = l2_bri.getText();
+                break;
+            case 3:
+                name = l3_name.getText();
+                hue = l3_hue.getText();
+                sat = l3_sat.getText();
+                bri = l3_bri.getText();
+                break;
+            case 4:
+                name = l4_name.getText();
+                hue = l4_hue.getText();
+                sat = l4_sat.getText();
+                bri = l4_bri.getText();
+                break;
+            case 5:
+                name = l5_name.getText();
+                hue = l5_hue.getText();
+                sat = l5_sat.getText();
+                bri = l5_bri.getText();
+                break;
+            case 6:
+                name = l6_name.getText();
+                hue = l6_hue.getText();
+                sat = l6_sat.getText();
+                bri = l6_bri.getText();
+                break;
+        }
+        return new String[]{name, hue, sat, bri};
+    }
+
 
     public void setL1_name(String l1_name) {
         this.l1_name.setText(l1_name);

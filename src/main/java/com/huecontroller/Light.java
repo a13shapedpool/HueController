@@ -127,7 +127,7 @@ public class Light {
             return connection.getResponseCode(); // 200 - OK (Good response)
 
         } catch (java.net.UnknownHostException e) {
-            System.out.println("Impossible to connecte To the HUE bridge!");
+            System.out.println("Impossible to connect to the HUE bridge!");
             return -1;
         } catch (Exception e) {
             System.out.println("Error: " + e);
