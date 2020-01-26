@@ -1,5 +1,7 @@
-package com.huecontroller;
+package com.huecontroller.UI;
 
+import com.huecontroller.entities.Light;
+import com.huecontroller.hueBridge;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -29,7 +31,8 @@ public class LightsMainController extends Thread {
             for (int i = 1; i <= 6; i++) {
                 lightList.add(new Light(i));
             }
-            Light.getLightProperty("productname", lightList.get(0).getID());
+            lightList.get(0).getLightType();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,8 +48,9 @@ public class LightsMainController extends Thread {
 
         while (!exit) {
             try {
-                Thread.sleep(200);
+                Thread.sleep(300);
                 checkForUpdates();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -59,7 +63,7 @@ public class LightsMainController extends Thread {
     }
 
     private void initLight(Light L) {
-        int id = L.getID();
+        int id = L.getLightID();
         switch (id) {
             case 1:
                 this.mainDialog.setL1_name(L.getName());
@@ -82,11 +86,6 @@ public class LightsMainController extends Thread {
         }
     }
 
-    public void lightON(int id) throws Exception {
-        lightList.get(id).lightSwitch();
-    }
-
-
     private void checkForUpdates() throws Exception {
         int panel = this.mainDialog.getPanelUpdated();
         if (panel > -1) {
@@ -96,9 +95,9 @@ public class LightsMainController extends Thread {
     }
 
     private void updateLight(Light L, String[] panelInfo) throws Exception {
-        Thread.sleep(10);
+        Thread.sleep(20);
         int hue, sat, bri;
-        switch (L.getProductName()) {
+        switch (L.getLightType()) {
             case "Hue go":
             case "Hue play":
             case "Hue color lamp":
@@ -116,15 +115,14 @@ public class LightsMainController extends Thread {
     }
 
     private void updateColorLight(Light L, int hue, int sat, int bri) throws Exception {
-        L.setColor(hue);
+        L.setHue(hue);
         L.setSaturation(sat);
         L.setBrightness(bri);
     }
 
 
-
     private void updateWhiteLightDisplay(Light L, Long bri) {
-        int id = L.getID();
+        int id = L.getLightID();
         switch (id) {
             case 1:
                 this.mainDialog.setL1_bri(bri);
@@ -148,7 +146,7 @@ public class LightsMainController extends Thread {
     }
 
     private void updateColorLightDisplay(Light L, Long hue, Long sat, Long bri) {
-        int id = L.getID();
+        int id = L.getLightID();
         switch (id) {
             case 1:
                 this.mainDialog.setL1_hue(hue);
@@ -185,28 +183,22 @@ public class LightsMainController extends Thread {
 
     private void readLightInfo(Light L) throws Exception {
 
-        if (L.needsUpdate) {
-            switch (L.getProductName()) {
-                case "Hue go":
-                case "Hue play":
-                case "Hue color lamp":
-                    Long hue = L.getLightHue();
-                    Long sat = L.getLightSaturation();
-                    Long bri = L.getLightBrightness();
+        switch (L.getLightType()) {
+            case "Hue go":
+            case "Hue play":
+            case "Hue color lamp":
+                Long hue = L.getLightHue();
+                Long sat = L.getLightSat();
+                Long bri = L.getLightBri();
 
-                    updateColorLightDisplay(L, hue, sat, bri);
-                    break;
+                updateColorLightDisplay(L, hue, sat, bri);
+                break;
 
-                case "Hue filament bulb":
-                    bri = L.getLightBrightness();
-                    updateWhiteLightDisplay(L, bri);
+            case "Hue filament bulb":
+                bri = L.getLightBri();
+                updateWhiteLightDisplay(L, bri);
 
-                    break;
-            }
-            L.needsUpdate = false;
+                break;
         }
     }
-
-
-
 }

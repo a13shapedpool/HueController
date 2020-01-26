@@ -1,4 +1,4 @@
-package com.huecontroller;
+package com.huecontroller.UI;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -14,7 +14,6 @@ public class LightsMainDialog extends JDialog {
     private JPanel contentPane;
     private JButton closeButton;
     private JButton connectButton;
-    private JList<Light> lightJList;
 
     private JPanel l1_panel;
     private JTextField l1_name;
@@ -170,6 +169,30 @@ public class LightsMainDialog extends JDialog {
 //
 //        }
 
+        l1_sat_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int sat = l1_sat_slider.getValue();
+                    setL1_sat((long) sat);
+                    setPanelUpdated(1);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l1_hue_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int hue = l1_hue_slider.getValue();
+                    setL1_hue((long) hue);
+                    setPanelUpdated(1);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
         l1_bri_slider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 try {
@@ -229,7 +252,7 @@ public class LightsMainDialog extends JDialog {
     }
 
     private void onSwitchButton(int id) throws Exception {
-        lightsMainController.lightON(id);
+        lightsMainController.lightList.get(id).lightSwitch();
     }
 
     public String[] getPanelInfo(int panelID) {
