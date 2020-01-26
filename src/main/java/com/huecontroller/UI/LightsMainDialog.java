@@ -1,4 +1,6 @@
-package com.huecontroller;
+package com.huecontroller.UI;
+
+import com.huecontroller.entities.oldLight;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -11,7 +13,7 @@ public class LightsMainDialog extends JDialog {
     private JPanel contentPane;
     private JButton closeButton;
     private JButton connectButton;
-    private JList<Light> lightJList;
+    private JList<oldLight> lightJList;
 
     private JTextField l1_name;
     private JTextField l1_room;
@@ -197,7 +199,7 @@ public class LightsMainDialog extends JDialog {
     }
 
     private void onSwitchButton(int id) throws Exception {
-        lightsMainController.lightON(id);
+        lightsMainController.LightList.get(id).lightSwitch();
     }
 
     public void setL1_name(String l1_name) {

@@ -1,5 +1,6 @@
-package com.huecontroller;
+package com.huecontroller.entities;
 
+import com.huecontroller.URLReader;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -10,14 +11,14 @@ import java.net.URL;
 import static com.huecontroller.hueBridge.base_url;
 import static com.huecontroller.hueBridge.hue_bridge_ip;
 
-public class Light {
+public class oldLight {
 
     private final String name;
     private final Integer lightID;
     private final String productName;
     private boolean needsUpdate;
 
-    public Light(String name, Integer lightID, String productName) throws Exception {
+    public oldLight(String name, Integer lightID, String productName) throws Exception {
 
         this.name = name;
         this.lightID = lightID;
@@ -25,7 +26,7 @@ public class Light {
 
     }
 
-    public Light(Integer lightID) throws Exception {
+    public oldLight(Integer lightID) throws Exception {
 
         this.name = getName(lightID).toString();
         this.lightID = lightID;
@@ -68,6 +69,7 @@ public class Light {
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(r);
             JSONObject j = (JSONObject) obj;
+            System.out.println(j);
             return j.get("productname");
 
         } catch (ClassCastException e) {

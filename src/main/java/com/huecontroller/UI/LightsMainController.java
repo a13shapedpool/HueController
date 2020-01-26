@@ -1,5 +1,7 @@
-package com.huecontroller;
+package com.huecontroller.UI;
 
+import com.huecontroller.entities.Light;
+import com.huecontroller.hueBridge;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -10,11 +12,11 @@ public class LightsMainController extends Thread {
 
     private LightsMainDialog mainDialog;
     private boolean exit;
-    public List<Light> lightList;
+    public List<Light> LightList;
 
     public LightsMainController(LightsMainDialog mainDialog) throws Exception {
         this.mainDialog = mainDialog;
-        this.lightList = new ArrayList<>();
+        this.LightList = new ArrayList<>();
     }
 
     @Override
@@ -26,24 +28,22 @@ public class LightsMainController extends Thread {
         }
 
         try {
-//
             for (int i = 1; i <= 6; i++) {
-                lightList.add(new Light(i));
-                System.out.println(lightList.get(i - 1).getProductName());
+                LightList.add(new Light(i));
+                System.out.println(LightList.get(i - 1).getLightType());
             }
 
-            Light.getLightProperty("productname", lightList.get(0).getID());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        for (Light L : lightList) {
+        for (Light L : LightList) {
             initLight(L);
         }
 
         while (!exit) {
             try {
-                for (Light L : lightList) {
+                for (Light L : LightList) {
                     readLightInfo(L);
                 }
 
@@ -59,7 +59,7 @@ public class LightsMainController extends Thread {
     }
 
     private void initLight(Light L) {
-        int id = L.getID();
+        int id = L.getLightID();
         switch (id) {
             case 1:
                 this.mainDialog.setL1_name(L.getName());
@@ -83,11 +83,11 @@ public class LightsMainController extends Thread {
     }
 
     public void lightON(int id) throws Exception {
-        lightList.get(id).lightSwitch();
+        LightList.get(id).lightOn();
     }
 
     private void updateWhiteLightDisplay(Light L, Long bri) {
-        int id = L.getID();
+        int id = L.getLightID();
         switch (id) {
             case 1:
                 this.mainDialog.setL1_bri(bri);
@@ -111,7 +111,7 @@ public class LightsMainController extends Thread {
     }
 
     private void updateColorLightDisplay(Light L, Long hue, Long sat, Long bri) {
-        int id = L.getID();
+        int id = L.getLightID();
         switch (id) {
             case 1:
                 this.mainDialog.setL1_hue(hue);
@@ -148,19 +148,19 @@ public class LightsMainController extends Thread {
 
     private void readLightInfo(Light L) throws Exception {
 
-        switch (L.getProductName()) {
+        switch (L.getLightType()) {
             case "Hue go":
             case "Hue play":
             case "Hue color lamp":
                 Long hue = L.getLightHue();
-                Long sat = L.getLightSaturation();
-                Long bri = L.getLightBrightness();
+                Long sat = L.getLightSat();
+                Long bri = L.getLightBri();
 
                 updateColorLightDisplay(L, hue, sat, bri);
                 break;
 
             case "Hue filament bulb":
-                bri = L.getLightBrightness();
+                bri = L.getLightBri();
                 updateWhiteLightDisplay(L, bri);
 
                 break;
