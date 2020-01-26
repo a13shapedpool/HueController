@@ -3,6 +3,7 @@ package com.huecontroller.UI;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -62,6 +63,11 @@ public class LightsMainDialog extends JDialog {
     private JSlider l1_sat_slider;
     private JSlider l1_bri_slider;
     private JSlider l1_hue_slider;
+    private JPanel l2_panel;
+    private JPanel l3_panel;
+    private JPanel l4_panel;
+    private JPanel l5_panel;
+    private JPanel l6_panel;
 
     private List<JTextField> briTextFields;
     private JButton getLightsButton;
@@ -70,6 +76,8 @@ public class LightsMainDialog extends JDialog {
 
     private boolean isConnected;
     public int panelUpdated = -1;
+    private int i = 0;
+    private int j = 0;
 
     public static void main(String[] args) throws Exception {
         LightsMainDialog dialog = new LightsMainDialog();
@@ -84,6 +92,7 @@ public class LightsMainDialog extends JDialog {
         getRootPane().setDefaultButton(closeButton);
         pack();
         isConnected = false;
+        this.componentsSetting();
 
         connectButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -99,9 +108,18 @@ public class LightsMainDialog extends JDialog {
 
         globalPartyButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onGlobalPartyButton();
+//                onGlobalPartyButton();
+                l1_panel.getComponent(i).setBackground(Color.BLACK);
+                l1_panel.revalidate();
+                l1_panel.repaint();
+                i++;
             }
         });
+
+        for (int i = 0 ; i < l1_panel.getComponentCount() ; i++) {
+            l1_panel.getComponent(i);
+
+        }
 
         l1_switch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -164,11 +182,6 @@ public class LightsMainDialog extends JDialog {
             }
         });
 
-//        private void sliderChangeListener(JSlider slider) {
-//            slider.addChangeListener
-//
-//        }
-
         l1_sat_slider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 try {
@@ -199,6 +212,7 @@ public class LightsMainDialog extends JDialog {
                     int bri = l1_bri_slider.getValue();
                     setL1_bri((long) bri);
                     setPanelUpdated(1);
+                    sliderChangeListener(l1_bri_slider);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -210,6 +224,24 @@ public class LightsMainDialog extends JDialog {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 onClose();
+            }
+        });
+    }
+
+    private void componentsSetting() {
+        l1_bri_slider.setName("l1_bri_slider");
+    }
+
+    private void sliderChangeListener (final JSlider slider) {
+        slider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    String s = slider.getName();
+                    System.out.println("NAME : " + s);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
     }
