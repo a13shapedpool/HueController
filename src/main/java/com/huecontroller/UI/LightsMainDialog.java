@@ -1,7 +1,5 @@
 package com.huecontroller.UI;
 
-import com.huecontroller.entities.oldLight;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +11,6 @@ public class LightsMainDialog extends JDialog {
     private JPanel contentPane;
     private JButton closeButton;
     private JButton connectButton;
-    private JList<oldLight> lightJList;
 
     private JTextField l1_name;
     private JTextField l1_room;
