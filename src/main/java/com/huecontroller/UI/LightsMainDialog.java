@@ -63,11 +63,6 @@ public class LightsMainDialog extends JDialog {
     private JSlider l1_sat_slider;
     private JSlider l1_bri_slider;
     private JSlider l1_hue_slider;
-    private JPanel l2_panel;
-    private JPanel l3_panel;
-    private JPanel l4_panel;
-    private JPanel l5_panel;
-    private JPanel l6_panel;
 
     private List<JTextField> briTextFields;
     private JButton getLightsButton;
@@ -116,7 +111,7 @@ public class LightsMainDialog extends JDialog {
             }
         });
 
-        for (int i = 0 ; i < l1_panel.getComponentCount() ; i++) {
+        for (int i = 0; i < l1_panel.getComponentCount(); i++) {
             l1_panel.getComponent(i);
 
         }
@@ -232,7 +227,7 @@ public class LightsMainDialog extends JDialog {
         l1_bri_slider.setName("l1_bri_slider");
     }
 
-    private void sliderChangeListener (final JSlider slider) {
+    private void sliderChangeListener(final JSlider slider) {
         slider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
