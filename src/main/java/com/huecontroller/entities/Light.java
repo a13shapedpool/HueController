@@ -17,6 +17,7 @@ public class Light {
     private final Integer id;
     private final String type;
     private boolean isOn;
+    private boolean isColor;
 
     public Light(Integer lightID) throws Exception {
         this.id = lightID;
@@ -31,6 +32,20 @@ public class Light {
 
     public boolean isOn() {
         return isOn;
+    }
+
+    public boolean isColor() {
+        switch (this.getLightType()) {
+            case "Hue go":
+            case "Hue play":
+            case "Hue color lamp":
+                this.isColor = true;
+                break;
+            case "Hue filament bulb":
+                this.isColor = false;
+                break;
+        }
+        return isColor;
     }
 
     public void setOn(boolean on) {

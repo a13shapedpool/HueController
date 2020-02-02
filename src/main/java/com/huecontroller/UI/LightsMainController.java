@@ -46,6 +46,8 @@ public class LightsMainController extends Thread {
             }
         }
 
+        mainDialog.lightPanel3.setLightPanel(lightList.get(3));
+
         while (!exit) {
             try {
                 Thread.sleep(300);

@@ -1,84 +1,83 @@
 package com.huecontroller.UI;
 
+import com.huecontroller.entities.LightPanel;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.List;
 
 public class LightsMainDialog extends JDialog {
 
+    public int panelUpdated = -1;
     private JPanel contentPane;
     private JButton closeButton;
     private JButton connectButton;
-
     private JPanel l1_panel;
     private JTextField l1_name;
     private JTextField l1_room;
     private JTextField l1_hue;
     private JTextField l1_sat;
     private JTextField l1_bri;
+    private JSlider l1_sat_slider;
+    private JSlider l1_bri_slider;
+    private JSlider l1_hue_slider;
     private JButton l1_switch;
-
     private JTextField l2_name;
     private JTextField l2_room;
     private JTextField l2_hue;
     private JTextField l2_sat;
     private JTextField l2_bri;
+    private JSlider l2_sat_slider;
+    private JSlider l2_bri_slider;
+    private JSlider l2_hue_slider;
     private JButton l2_switch;
-
     private JTextField l3_name;
     private JTextField l3_room;
     private JTextField l3_hue;
     private JTextField l3_sat;
     private JTextField l3_bri;
+    private JSlider l3_sat_slider;
+    private JSlider l3_bri_slider;
+    private JSlider l3_hue_slider;
     private JButton l3_switch;
-
     private JTextField l4_name;
     private JTextField l4_room;
     private JTextField l4_hue;
     private JTextField l4_sat;
     private JTextField l4_bri;
+    private JSlider l4_sat_slider;
+    private JSlider l4_bri_slider;
+    private JSlider l4_hue_slider;
     private JButton l4_switch;
-
     private JTextField l5_name;
     private JTextField l5_room;
     private JTextField l5_hue;
     private JTextField l5_sat;
     private JTextField l5_bri;
+    private JSlider l5_sat_slider;
+    private JSlider l5_bri_slider;
+    private JSlider l5_hue_slider;
     private JButton l5_switch;
-
     private JTextField l6_name;
     private JTextField l6_room;
     private JTextField l6_hue;
     private JTextField l6_bri;
     private JTextField l6_sat;
+    private JSlider l6_sat_slider;
+    private JSlider l6_bri_slider;
+    private JSlider l6_hue_slider;
     private JButton l6_switch;
-
     private JButton globalPartyButton;
-    private JSlider l1_sat_slider;
-    private JSlider l1_bri_slider;
-    private JSlider l1_hue_slider;
-
-    private List<JTextField> briTextFields;
-    private JButton getLightsButton;
-
     private LightsMainController lightsMainController;
-
     private boolean isConnected;
-    public int panelUpdated = -1;
     private int i = 0;
     private int j = 0;
 
-    public static void main(String[] args) throws Exception {
-        LightsMainDialog dialog = new LightsMainDialog();
-        dialog.setLightsMainController(new LightsMainController(dialog));
-        dialog.setVisible(true);
-    }
+    public LightPanel lightPanel3;
 
     public LightsMainDialog() {
         setSize(1820, 980);
@@ -87,7 +86,9 @@ public class LightsMainDialog extends JDialog {
         getRootPane().setDefaultButton(closeButton);
         pack();
         isConnected = false;
-        this.componentsSetting();
+
+        lightPanel3 = new LightPanel(3, l3_switch, l3_hue_slider, l3_sat_slider,
+                l3_bri_slider, l3_hue, l3_sat, l3_bri, l3_name);
 
         connectButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -101,19 +102,21 @@ public class LightsMainDialog extends JDialog {
             }
         });
 
+
         globalPartyButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-//                onGlobalPartyButton();
-                l1_panel.getComponent(i).setBackground(Color.BLACK);
-                l1_panel.revalidate();
-                l1_panel.repaint();
-                i++;
+                try {
+                    lightPanel3.getLight().lightSwitch();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                System.out.println(lightPanel3.getLight().getName().toString());
             }
         });
 
         for (int i = 0; i < l1_panel.getComponentCount(); i++) {
             l1_panel.getComponent(i);
-
         }
 
         l1_switch.addActionListener(new ActionListener() {
@@ -140,6 +143,7 @@ public class LightsMainDialog extends JDialog {
         l3_switch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+                    System.out.println(l3_switch.getParent());
                     onSwitchButton(2);
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -214,6 +218,19 @@ public class LightsMainDialog extends JDialog {
             }
         });
 
+        l3_bri_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int bri = l3_bri_slider.getValue();
+                    setL3_bri((long) bri);
+                    setPanelUpdated(3);
+                    sliderChangeListener(l3_bri_slider);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -221,6 +238,12 @@ public class LightsMainDialog extends JDialog {
                 onClose();
             }
         });
+    }
+
+    public static void main(String[] args) throws Exception {
+        LightsMainDialog dialog = new LightsMainDialog();
+        dialog.setLightsMainController(new LightsMainController(dialog));
+        dialog.setVisible(true);
     }
 
     private void componentsSetting() {
@@ -280,6 +303,23 @@ public class LightsMainDialog extends JDialog {
 
     private void onSwitchButton(int id) throws Exception {
         lightsMainController.lightList.get(id).lightSwitch();
+    }
+
+    private void onHueSlider(int id) {
+        if (lightsMainController.lightList.get(id).isColor()) {
+            int sat = l1_sat_slider.getValue();
+            setL1_sat((long) sat);
+            setPanelUpdated(id);
+        }
+
+    }
+
+    private void onSatSlider(int id) {
+
+    }
+
+    private void onBriSlider(int id) {
+
     }
 
     public String[] getPanelInfo(int panelID) {
