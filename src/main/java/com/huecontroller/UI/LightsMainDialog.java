@@ -1,6 +1,11 @@
 package com.huecontroller.UI;
 
+import com.huecontroller.entities.LightPanel;
+
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -52,109 +57,59 @@ public class LightsMainDialog extends JDialog {
     private JTextField l6_sat;
     private JButton l6_switch;
 
-    private JButton globalPartyButton;
-
-
-
-    private JButton getLightsButton;
-    /*
-    Boutons, textes, etc...
-     */
 
     private LightsMainController lightsMainController;
+    private JFrame mainFrame;
 
     private boolean isConnected;
 
 
-    public LightsMainDialog() {
-        setSize(1820, 980);
-        setContentPane(contentPane);
-        setModal(true);
-        getRootPane().setDefaultButton(closeButton);
-        pack();
-        isConnected = false;
+    public LightsMainDialog() throws Exception {
+        this.lightsMainController = new LightsMainController(this);
 
+        JFrame frame = new JFrame();
+        this.mainFrame = frame;
 
+        GridBagLayout gbl = new GridBagLayout();
+        GridBagConstraints gbc = new GridBagConstraints();
+        frame.setLayout(gbl);
 
-//        connectButton.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                onConnectButton();
-//            }
-//        });
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        JButton connectButton = new JButton("Connect");
+        this.connectButton = connectButton;
+        frame.add(this.connectButton);
 
-//        closeButton.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                onClose();
-//            }
-//        });
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        JButton closeButton = new JButton("Close");
+        this.closeButton = closeButton;
+        frame.add(this.closeButton);
 
-//        globalPartyButton.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                onGlobalPartyButton();
-//            }
-//        });
+        // Panel 1
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        LightPanel panel = createPanel(1);
+        frame.add(panel, gbc);
+        frame.pack();
+        frame.setVisible(true);
 
-//        l1_switch.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    onSwitchButton(0);
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        });
+        this.connectButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onConnectButton();
+            }
+        });
 
-//        l2_switch.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    onSwitchButton(1);
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        });
-
-//        l3_switch.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    onSwitchButton(2);
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        });
-
-//        l4_switch.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    onSwitchButton(3);
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        });
-
-//        l5_switch.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    onSwitchButton(4);
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        });
-
-//        l6_switch.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    onSwitchButton(5);
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        });
+        this.closeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onClose();
+            }
+        });
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 onClose();
@@ -162,14 +117,69 @@ public class LightsMainDialog extends JDialog {
         });
     }
 
-//    private void onConnectButton() {
-//        if (!isConnected) {
-//            this.lightsMainController.start();
-//            this.connectButton.setText("Connected to HUE Bridge");
-//            this.connectButton.setEnabled(false);
-//            isConnected = true;
-//        }
-//    }
+    public void updateDisplay() {
+        this.mainFrame.revalidate();
+        this.mainFrame.repaint();
+    }
+
+    private void onConnectButton() {
+        if (!isConnected) {
+            this.lightsMainController.start();
+            this.connectButton.setText("Connected to HUE Bridge");
+            this.connectButton.setEnabled(false);
+            isConnected = true;
+        }
+    }
+
+    public LightPanel createPanel(int id) {
+        System.out.println("PANEL NUMERO " + id + " créé");
+
+        GridBagLayout gbl = new GridBagLayout();
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        LightPanel panel = new LightPanel(id);
+        panel.setLayout(gbl);
+
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+
+        LightPanel lightPanel = new LightPanel(1);
+
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(lightPanel.getSwitchButton(), gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(lightPanel.getHueSlider(), gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add(lightPanel.getSatSlider(), gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        panel.add(lightPanel.getBriSlider(), gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        panel.add(lightPanel.getHueText(), gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        panel.add(lightPanel.getSatText(), gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        panel.add(lightPanel.getBriText(), gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        panel.add(lightPanel.getIconName(), gbc);
+
+        return panel;
+    }
 
     private void onClose() {
         try {
