@@ -8,9 +8,9 @@ import java.util.List;
 
 public class LightsMainController extends Thread {
 
+    public List<Light> lightList;
     private LightsMainDialog mainDialog;
     private boolean exit;
-    public List<Light> lightList;
 
     public LightsMainController(LightsMainDialog mainDialog) throws Exception {
         this.mainDialog = mainDialog;
@@ -26,7 +26,7 @@ public class LightsMainController extends Thread {
         }
 
         try {
-            for (int i = 1; i <= 6; i++) {
+            for (int i = 1; i <= 7; i++) {
                 lightList.add(new Light(i));
             }
             Light.getLightProperty("productname", lightList.get(0).getID());
@@ -42,6 +42,8 @@ public class LightsMainController extends Thread {
                 e.printStackTrace();
             }
         }
+
+        this.mainDialog.panelInit();
 
         while (!exit) {
             try {
@@ -79,6 +81,9 @@ public class LightsMainController extends Thread {
             case 6:
                 this.mainDialog.setL6_name(L.getName());
                 break;
+            case 7:
+                this.mainDialog.setL7_name(L.getName());
+                break;
         }
     }
 
@@ -96,21 +101,16 @@ public class LightsMainController extends Thread {
     }
 
     private void updateLight(Light L, String[] panelInfo) throws Exception {
-        Thread.sleep(10);
+        Thread.sleep(20);
         int hue, sat, bri;
-        switch (L.getProductName()) {
-            case "Hue go":
-            case "Hue play":
-            case "Hue color lamp":
-                hue = Integer.parseInt(panelInfo[1]);
-                sat = Integer.parseInt(panelInfo[2]);
-                bri = Integer.parseInt(panelInfo[3]);
-                updateColorLight(L, hue, sat, bri);
-                break;
-            case "Hue filament bulb":
-                bri = Integer.parseInt(panelInfo[3]);
-                L.setBrightness(bri);
-                break;
+        if (L.isColor) {
+            hue = Integer.parseInt(panelInfo[1]);
+            sat = Integer.parseInt(panelInfo[2]);
+            bri = Integer.parseInt(panelInfo[3]);
+            updateColorLight(L, hue, sat, bri);
+        } else {
+            bri = Integer.parseInt(panelInfo[3]);
+            L.setBrightness(bri);
         }
         this.mainDialog.setPanelUpdated(-1);
     }
@@ -120,7 +120,6 @@ public class LightsMainController extends Thread {
         L.setSaturation(sat);
         L.setBrightness(bri);
     }
-
 
 
     private void updateWhiteLightDisplay(Light L, Long bri) {
@@ -143,6 +142,9 @@ public class LightsMainController extends Thread {
                 break;
             case 6:
                 this.mainDialog.setL6_bri(bri);
+                break;
+            case 7:
+                this.mainDialog.setL7_bri(bri);
                 break;
         }
     }
@@ -180,33 +182,30 @@ public class LightsMainController extends Thread {
                 this.mainDialog.setL6_sat(sat);
                 this.mainDialog.setL6_bri(bri);
                 break;
+            case 7:
+                this.mainDialog.setL7_hue(hue);
+                this.mainDialog.setL7_sat(sat);
+                this.mainDialog.setL7_bri(bri);
+                break;
         }
     }
 
     private void readLightInfo(Light L) throws Exception {
 
         if (L.needsUpdate) {
-            switch (L.getProductName()) {
-                case "Hue go":
-                case "Hue play":
-                case "Hue color lamp":
-                    Long hue = L.getLightHue();
-                    Long sat = L.getLightSaturation();
-                    Long bri = L.getLightBrightness();
+            if (L.isColor) {
+                Long hue = L.getLightHue();
+                Long sat = L.getLightSaturation();
+                Long bri = L.getLightBrightness();
 
-                    updateColorLightDisplay(L, hue, sat, bri);
-                    break;
-
-                case "Hue filament bulb":
-                    bri = L.getLightBrightness();
-                    updateWhiteLightDisplay(L, bri);
-
-                    break;
+                updateColorLightDisplay(L, hue, sat, bri);
+            } else {
+                Long bri = L.getLightBrightness();
+                updateWhiteLightDisplay(L, bri);
             }
             L.needsUpdate = false;
         }
     }
-
 
 
 }

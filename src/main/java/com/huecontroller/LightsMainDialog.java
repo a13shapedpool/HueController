@@ -23,46 +23,82 @@ public class LightsMainDialog extends JDialog {
     private JTextField l1_sat;
     private JTextField l1_bri;
     private JButton l1_switch;
+    private JSlider l1_sat_slider;
+    private JSlider l1_bri_slider;
+    private JSlider l1_hue_slider;
 
+    private JPanel l2_panel;
     private JTextField l2_name;
     private JTextField l2_room;
     private JTextField l2_hue;
     private JTextField l2_sat;
     private JTextField l2_bri;
     private JButton l2_switch;
+    private JSlider l2_sat_slider;
+    private JSlider l2_bri_slider;
+    private JSlider l2_hue_slider;
 
+    private JPanel l3_panel;
     private JTextField l3_name;
     private JTextField l3_room;
     private JTextField l3_hue;
     private JTextField l3_sat;
     private JTextField l3_bri;
     private JButton l3_switch;
+    private JSlider l3_hue_slider;
+    private JSlider l3_sat_slider;
+    private JSlider l3_bri_slider;
 
+    private JPanel l4_panel;
     private JTextField l4_name;
     private JTextField l4_room;
     private JTextField l4_hue;
     private JTextField l4_sat;
     private JTextField l4_bri;
     private JButton l4_switch;
+    private JSlider l4_hue_slider;
+    private JSlider l4_sat_slider;
+    private JSlider l4_bri_slider;
 
+    private JPanel l5_panel;
     private JTextField l5_name;
     private JTextField l5_room;
     private JTextField l5_hue;
     private JTextField l5_sat;
     private JTextField l5_bri;
     private JButton l5_switch;
+    private JSlider l5_hue_slider;
+    private JSlider l5_sat_slider;
+    private JSlider l5_bri_slider;
 
+    private JPanel l6_panel;
     private JTextField l6_name;
     private JTextField l6_room;
     private JTextField l6_hue;
     private JTextField l6_bri;
     private JTextField l6_sat;
     private JButton l6_switch;
+    private JSlider l6_hue_slider;
+    private JSlider l6_sat_slider;
+    private JSlider l6_bri_slider;
+
+    private JPanel l7_panel;
+    private JTextField l7_name;
+    private JTextField l7_room;
+    private JTextField l7_hue;
+    private JTextField l7_bri;
+    private JTextField l7_sat;
+    private JButton l7_switch;
+    private JSlider l7_hue_slider;
+    private JSlider l7_sat_slider;
+    private JSlider l7_bri_slider;
+
 
     private JButton globalPartyButton;
-    private JSlider l1_sat_slider;
-    private JSlider l1_bri_slider;
-    private JSlider l1_hue_slider;
+
+
+
+
 
     private List<JTextField> briTextFields;
     private JButton getLightsButton;
@@ -79,7 +115,7 @@ public class LightsMainDialog extends JDialog {
     }
 
     public LightsMainDialog() {
-        setSize(1820, 980);
+//        setSize(1820, 980);
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(closeButton);
@@ -106,7 +142,6 @@ public class LightsMainDialog extends JDialog {
 
         l1_switch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                panelUpdated = 1;
                 try {
                     onSwitchButton(0);
                 } catch (Exception ex) {
@@ -165,10 +200,40 @@ public class LightsMainDialog extends JDialog {
             }
         });
 
-//        private void sliderChangeListener(JSlider slider) {
-//            slider.addChangeListener
-//
-//        }
+        l7_switch.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    onSwitchButton(6);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+
+        l1_hue_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int hue = l1_hue_slider.getValue();
+                    setL1_hue((long) hue);
+                    setPanelUpdated(1);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l1_sat_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int sat = l1_sat_slider.getValue();
+                    setL1_sat((long) sat);
+                    setPanelUpdated(1);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 
         l1_bri_slider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -176,6 +241,222 @@ public class LightsMainDialog extends JDialog {
                     int bri = l1_bri_slider.getValue();
                     setL1_bri((long) bri);
                     setPanelUpdated(1);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l2_hue_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int hue = l2_hue_slider.getValue();
+                    setL2_hue((long) hue);
+                    setPanelUpdated(2);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l2_sat_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int sat = l2_sat_slider.getValue();
+                    setL2_sat((long) sat);
+                    setPanelUpdated(2);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l2_bri_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int bri = l2_bri_slider.getValue();
+                    setL2_bri((long) bri);
+                    setPanelUpdated(2);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l3_hue_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int hue = l3_hue_slider.getValue();
+                    setL3_hue((long) hue);
+                    setPanelUpdated(3);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l3_sat_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int sat = l3_sat_slider.getValue();
+                    setL3_sat((long) sat);
+                    setPanelUpdated(3);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l3_bri_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int bri = l3_bri_slider.getValue();
+                    setL3_bri((long) bri);
+                    setPanelUpdated(3);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l4_hue_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int hue = l4_hue_slider.getValue();
+                    setL4_hue((long) hue);
+                    setPanelUpdated(4);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l4_sat_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int sat = l4_sat_slider.getValue();
+                    setL4_sat((long) sat);
+                    setPanelUpdated(4);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l4_bri_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int bri = l4_bri_slider.getValue();
+                    setL4_bri((long) bri);
+                    setPanelUpdated(4);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l5_hue_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int hue = l5_hue_slider.getValue();
+                    setL5_hue((long) hue);
+                    setPanelUpdated(5);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l5_sat_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int sat = l5_sat_slider.getValue();
+                    setL5_sat((long) sat);
+                    setPanelUpdated(5);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l5_bri_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int bri = l5_bri_slider.getValue();
+                    setL5_bri((long) bri);
+                    setPanelUpdated(5);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l6_hue_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int hue = l6_hue_slider.getValue();
+                    setL6_hue((long) hue);
+                    setPanelUpdated(6);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l6_sat_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int sat = l6_sat_slider.getValue();
+                    setL6_sat((long) sat);
+                    setPanelUpdated(6);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l6_bri_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int bri = l6_bri_slider.getValue();
+                    setL6_bri((long) bri);
+                    setPanelUpdated(6);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l7_hue_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int hue = l7_hue_slider.getValue();
+                    setL7_hue((long) hue);
+                    setPanelUpdated(7);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l7_sat_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int sat = l7_sat_slider.getValue();
+                    setL7_sat((long) sat);
+                    setPanelUpdated(7);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        l7_bri_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    int bri = l7_bri_slider.getValue();
+                    setL7_bri((long) bri);
+                    setPanelUpdated(7);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -199,6 +480,70 @@ public class LightsMainDialog extends JDialog {
         this.panelUpdated = i;
     }
 
+    public void panelInit() {
+        for (Light L : lightsMainController.lightList) {
+            if (!L.isColor) {
+                switch (L.getID()) {
+                    case 1:
+                        l1_hue_slider.setEnabled(false);
+                        l1_sat_slider.setEnabled(false);
+                        l1_hue_slider.setValue(0);
+                        l1_sat_slider.setValue(0);
+                        l1_hue.setEnabled(false);
+                        l1_sat.setEnabled(false);
+                        break;
+                    case 2:
+                        l2_hue_slider.setEnabled(false);
+                        l2_sat_slider.setEnabled(false);
+                        l2_hue_slider.setValue(0);
+                        l2_sat_slider.setValue(0);
+                        l2_hue.setEnabled(false);
+                        l2_sat.setEnabled(false);
+                        break;
+                    case 3:
+                        l3_hue_slider.setEnabled(false);
+                        l3_sat_slider.setEnabled(false);
+                        l3_hue_slider.setValue(0);
+                        l3_sat_slider.setValue(0);
+                        l3_hue.setEnabled(false);
+                        l3_sat.setEnabled(false);
+                        break;
+                    case 4:
+                        l4_hue_slider.setEnabled(false);
+                        l4_sat_slider.setEnabled(false);
+                        l4_hue_slider.setValue(0);
+                        l4_sat_slider.setValue(0);
+                        l4_hue.setEnabled(false);
+                        l4_sat.setEnabled(false);
+                        break;
+                    case 5:
+                        l5_hue_slider.setEnabled(false);
+                        l5_sat_slider.setEnabled(false);
+                        l5_hue_slider.setValue(0);
+                        l5_sat_slider.setValue(0);
+                        l5_hue.setEnabled(false);
+                        l5_sat.setEnabled(false);
+                        break;
+                    case 6:
+                        l6_hue_slider.setEnabled(false);
+                        l6_sat_slider.setEnabled(false);
+                        l6_hue_slider.setValue(0);
+                        l6_sat_slider.setValue(0);
+                        l6_hue.setEnabled(false);
+                        l6_sat.setEnabled(false);
+                        break;
+                    case 7:
+                        l7_hue_slider.setEnabled(false);
+                        l7_sat_slider.setEnabled(false);
+                        l7_hue_slider.setValue(0);
+                        l7_sat_slider.setValue(0);
+                        l7_hue.setEnabled(false);
+                        l7_sat.setEnabled(false);
+                        break;
+                }
+            }
+        }
+    }
 
     private void onConnectButton() {
         if (!isConnected) {
@@ -230,6 +575,7 @@ public class LightsMainDialog extends JDialog {
 
     private void onSwitchButton(int id) throws Exception {
         lightsMainController.lightON(id);
+        lightsMainController.lightList.get(id).displayLightInfo();
     }
 
     public String[] getPanelInfo(int panelID) {
@@ -273,6 +619,12 @@ public class LightsMainDialog extends JDialog {
                 hue = l6_hue.getText();
                 sat = l6_sat.getText();
                 bri = l6_bri.getText();
+                break;
+            case 7:
+                name = l7_name.getText();
+                hue = l7_hue.getText();
+                sat = l7_sat.getText();
+                bri = l7_bri.getText();
                 break;
         }
         return new String[]{name, hue, sat, bri};
@@ -363,6 +715,10 @@ public class LightsMainDialog extends JDialog {
         this.l6_name.setText(l6_name);
     }
 
+    public void setL7_name(String l7_name) {
+        this.l7_name.setText(l7_name);
+    }
+
     public void setL6_hue(Long l6_hue) {
         this.l6_hue.setText(l6_hue.toString());
     }
@@ -373,6 +729,18 @@ public class LightsMainDialog extends JDialog {
 
     public void setL6_bri(Long l6_bri) {
         this.l6_bri.setText(l6_bri.toString());
+    }
+
+    public void setL7_hue(Long l7_hue) {
+        this.l7_hue.setText(l7_hue.toString());
+    }
+
+    public void setL7_sat(Long l7_sat) {
+        this.l7_sat.setText(l7_sat.toString());
+    }
+
+    public void setL7_bri(Long l7_bri) {
+        this.l7_bri.setText(l7_bri.toString());
     }
 
 }

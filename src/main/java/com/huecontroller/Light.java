@@ -15,6 +15,7 @@ public class Light {
     private final String name;
     private final Integer lightID;
     private final String productName;
+    public final boolean isColor;
     public boolean needsUpdate;
 
     public Light(String name, Integer lightID, String productName) throws Exception {
@@ -23,6 +24,7 @@ public class Light {
         this.lightID = lightID;
         this.productName = productName;
         this.needsUpdate = true;
+        this.isColor = setIsColor();
 
     }
 
@@ -32,19 +34,8 @@ public class Light {
         this.lightID = lightID;
         this.productName = getProductName(lightID).toString();
         this.needsUpdate = true;
+        this.isColor = setIsColor();
 
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public Integer getID() {
-        return this.lightID;
-    }
-
-    public String getProductName() {
-        return this.productName;
     }
 
     public static Object getName(Integer lightID) throws Exception {
@@ -78,7 +69,6 @@ public class Light {
             return false;
         }
     }
-
 
     public static Object getLightProperty(String property_name, Integer lightID) throws Exception {
 
@@ -136,6 +126,30 @@ public class Light {
 
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    public Integer getID() {
+        return this.lightID;
+    }
+
+    public String getProductName() {
+        return this.productName;
+    }
+
+    private boolean setIsColor() {
+        switch (this.getProductName()) {
+            case "Hue go":
+            case "Hue play":
+            case "Hue color lamp":
+                return true;
+            case "Hue filament bulb":
+                return false;
+        }
+        return true;
+    }
+
     public boolean getLightState() throws Exception {
         return ((Boolean) getLightProperty("on", this.lightID));
     }
@@ -175,6 +189,16 @@ public class Light {
 
     public void setSaturation(Integer value) throws Exception {
         setLightProperty(this.lightID, "sat", value);
+    }
+
+    public void displayLightInfo() throws Exception {
+        System.out.println("Light n°" + this.lightID);
+        System.out.println("----");
+        System.out.println(this.name + " | " + this.productName);
+        System.out.println("Hue : " + this.getLightHue());
+        System.out.println("Sat : " + this.getLightSaturation());
+        System.out.println("Bri : " + this.getLightBrightness());
+        System.out.println("\n----\n");
     }
 
     public void setLightEffectOn() throws Exception {
